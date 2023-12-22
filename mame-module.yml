@@ -7,7 +7,7 @@ modules:
       strip: true
     build-commands:
       - make
-          -j echo $(nproc)
+          -j ${FLATPAK_BUILDER_N_JOBS}
           CFLAGS+=-Wno-error=restrict
           USE_QTDEBUG=0 
           USE_WAYLAND=1
