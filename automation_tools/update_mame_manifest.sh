@@ -14,7 +14,7 @@ sed -i 's/[[:space:]]*#.*$//' "$manifest_header"
 sed -i 's/net.retrodeck.retrodeck/net.retrodeck.mame/' "$manifest_header"
 sed -i 's/retrodeck\.sh/mame/' "$manifest_header"
 
-cat "$manifest_header" >> "$mame_manifest"
+cat "$manifest_header" > "$mame_manifest"
 cat "$mame_module" >> "$mame_manifest"
 
 rm -rf RetroDECK

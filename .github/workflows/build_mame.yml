@@ -28,71 +28,33 @@ jobs:
       - name: "Creating MAME manifest"
         run: "/bin/bash ${GITHUB_WORKSPACE}/automation_tools/update_mame_manifest.sh"
 
-      - name: "Adding flatpak portal for automated updates (cooker only)"
-        run: "/bin/bash ${GITHUB_WORKSPACE}/automation_tools/cooker_flatpak_portal_add.sh"
-
-      - name: "Updating release notes in appdata"
-        run: "automation_tools/appdata_management.sh"
-
       - name: "[DEBUG] Outputting manifest"
-        run: cat net.retrodeck.retrodeck.yml
+        run: cat net.retrodeck.mame.yml
 
-      - name: "Build flatpak: download only"
+      - name: "Build flatpak"
         id: "flatpak-download"
-        run: "/bin/bash ${GITHUB_WORKSPACE}/automation_tools/flatpak_build_download_only.sh"
-        continue-on-error: true
-
-      # Sometimes flatpak download fails, in this case it tries a second time
-      - name: "Build flatpak: download only (retry)"
-        if: steps.flatpak-download.outcome == 'failure'
         run: |
-          echo "Download failed, maybe some hash changed since the build start."
-          echo "Recalculating hashes and retrying download..."
-          rm -f "{GITHUB_WORKSPACE}/net.retrodeck.retrodeck.yml"
-          cp "${GITHUB_WORKSPACE}/net.retrodeck.retrodeck.yml.bak" "${GITHUB_WORKSPACE}/net.retrodeck.retrodeck.yml"
-          "${GITHUB_WORKSPACE}/automation_tools/pre_build_automation.sh"
-          "${GITHUB_WORKSPACE}/automation_tools/flatpak_build_download_only.sh"
+          flatpak-builder --user --force-clean \
+            --install-deps-from=flathub \
+            --install-deps-from=flathub-beta \
+            --repo=${GITHUB_WORKSPACE}/mame-repo \
+            "${GITHUB_WORKSPACE}" \
+            net.retrodeck.mame.yml
 
-      - name: Build flatpak
-        run: "/bin/bash ${GITHUB_WORKSPACE}/automation_tools/flatpak_build_only.sh"
-
-      - name: Create Artifact for flathub
+      - name: Create Artifact for RetroDECK
         run: | 
-          tar -czf ${GITHUB_WORKSPACE}/RetroDECK-Artifact-cooker.tar.gz -C ${GITHUB_WORKSPACE}/retrodeck-flatpak-cooker .
-          hash=($(sha256sum ${GITHUB_WORKSPACE}/RetroDECK-Artifact-cooker.tar.gz))
+          tar -czf ${GITHUB_WORKSPACE}/RetroDECK-MAME-Artifact.tar.gz -C ${GITHUB_WORKSPACE}/mame-repo .
+          hash=($(sha256sum ${GITHUB_WORKSPACE}/RetroDECK-MAME-Artifact.tar.gz))
           echo $hash > ${GITHUB_WORKSPACE}/RetroDECK-Artifact-cooker.sha
           mv -f RetroDECK-Artifact-cooker.* ${{ secrets.ARTIFACT_REPO }}
         continue-on-error: true
 
-      - name: Create Bundle
-        run: "/bin/bash ${GITHUB_WORKSPACE}/automation_tools/flatpak_build_bundle.sh"
-
       - name: Set environment variable with current branch name
         run: echo "GITHUB_REF_SLUG=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
-
-      - name: Get commits since last release
-        run: |
-          # Get the latest release tag
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-          # Get all commits since the latest release tag
-          COMMITS=$(git log $LATEST_TAG..HEAD --pretty=format:"- %s")
-          # Set the output variable
-          echo "::set-output name=commits::$COMMITS"
-        id: commits
-        continue-on-error: true
 
       - name: Get branch name
         id: branch_name
         run: echo "BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')" >> $GITHUB_ENV
-
-      # if it's a feature branch it will not marked as "latest" cooker version
-      - name: "Set makeLatest (cooker only)"
-        run: |
-          if [[ "$BRANCH_NAME" == 'feat/'* ]]; then
-            echo "MAKE_LATEST=false" >> $GITHUB_ENV
-          else
-            echo "MAKE_LATEST=true" >> $GITHUB_ENV
-          fi
 
       - name: Publish the flatpak in a new cooker release
         uses: ncipollo/release-action@v1
@@ -100,29 +62,17 @@ jobs:
           tag: "${{env.BRANCH_NAME}}-${{ env.buildid }}"
           body: |
             # Release Notes (Cooker)
-            This is a cooker snapshot based on the commit: ${{ github.event.repository.full_name }}@${{github.sha}}.
+            These are the artifact of RetroDECK MAME, commit: ${{ github.event.repository.full_name }}@${{github.sha}}.
             On branch [${{env.BRANCH_NAME}}](https://github.com/XargonWan/RetroDECK/tree/${{env.BRANCH_NAME}}).
 
-            ## Commits since last release
-            ${{ steps.commits.outputs.commits }}
-
-            For the full release note for this build please refer to the channel [#BETA-TESTING](https://discord.gg/qQcrFvaA2C) on our Discord server.
-      
-            Cooker channel is provided for the community to test fixes and explore new functionality.
-            Please DO NOT open issues or ask support on this build.
-
-          artifacts: "RetroDECK-cooker.flatpak,RetroDECK-Artifact.tar.gz"
+          artifacts: "RetroDECK-MAME-Artifact.tar.gz"
           allowUpdates: true
-          makeLatest: ${{env.MAKE_LATEST}} # if it's a feat branch is not considered the latest build
+          makeLatest: true
           token: ${{ secrets.TRIGGER_BUILD_TOKEN }}
-          repo: RetroDECK-cooker
         continue-on-error: true
 
-      # In case it cannot publish the release at least it's providing the flatpak file for creating a manual release
-      - name: Upload RetroDECK-cooker.flatpak
-        uses: actions/upload-artifact@v3
-        with:
-          name: retrodeck-flatpak
-          path: RetroDECK-cooker.flatpak
-        continue-on-error: true
+      - name: "Committing changes"
+        uses: EndBug/add-and-commit@v9.1.3
+
+
 
