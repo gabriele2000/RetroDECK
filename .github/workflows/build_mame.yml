@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  Building_RetroDECK:
+  Building_RetroDECK-MAME:
     #runs-on: self-hosted
     runs-on: ubuntu-latest
     steps:
