@@ -4,7 +4,7 @@ runtime-version: "6.5"
 sdk: org.kde.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm16
-command: mame
+command: /app/bin/mame
 
 add-extensions:
   org.ppsspp.PPSSPP.Locale:
@@ -36,6 +36,8 @@ finish-args:
   - --env=SDL_VIDEO_X11_WMCLASS=net.retrodeck.mame
   - --env=SDL_VIDEO_WAYLAND_WMCLASS=net.retrodeck.mame
   - --unset-env=QEMU_AUDIO_DRV
+
+modules:
 
   - name: mame
     buildsystem: simple

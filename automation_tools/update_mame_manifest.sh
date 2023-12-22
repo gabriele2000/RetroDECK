@@ -5,7 +5,7 @@ git clone https://github.com/XargonWan/RetroDECK --depth=1 RetroDECK
 # Creating MAME manifest
 manifest_header="manifest-header.yml"
 mame_module="mame-module.yml"
-mame_manifest="net.retrodeck.mame"
+mame_manifest="net.retrodeck.mame.yml"
 
 sed -n '/cleanup/q;p' RetroDECK/net.retrodeck.retrodeck.yml > "$manifest_header"
 sed -i '/^[[:space:]]*#/d' "$manifest_header"
