@@ -38,7 +38,7 @@ jobs:
             --install-deps-from=flathub \
             --install-deps-from=flathub-beta \
             --repo=${GITHUB_WORKSPACE}/mame-repo \
-            "${GITHUB_WORKSPACE}" \
+            "${GITHUB_WORKSPACE}"/mame-build-dir \
             net.retrodeck.mame.yml
 
       - name: Create Artifact for RetroDECK
