@@ -1,5 +1,6 @@
 modules:
 
+  # https://sdlmame.wallyweek.org/download/
   - name: mame
     buildsystem: simple
     build-options:
