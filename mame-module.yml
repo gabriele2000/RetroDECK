@@ -9,7 +9,7 @@ modules:
       strip: true
     build-commands:
       - make
-          -j 6
+          -j 1
           CFLAGS+=-Wno-error=restrict
           USE_QTDEBUG=0 
           USE_WAYLAND=1
