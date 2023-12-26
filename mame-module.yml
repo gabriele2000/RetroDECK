@@ -1,6 +1,7 @@
 modules:
 
   # https://sdlmame.wallyweek.org/download/
+  # -j ${FLATPAK_BUILDER_N_JOBS}
   - name: mame
     buildsystem: simple
     build-options:
@@ -8,7 +9,7 @@ modules:
       strip: true
     build-commands:
       - make
-          -j ${FLATPAK_BUILDER_N_JOBS}
+          -j 6
           CFLAGS+=-Wno-error=restrict
           USE_QTDEBUG=0 
           USE_WAYLAND=1
