@@ -44,6 +44,10 @@ modules:
     build-options:
       no-debuginfo: true
       strip: true
+      env:
+        CC: clang
+        CXX: clang++
+        LD: lld
     build-commands:
       - make
           -j echo $(nproc)
