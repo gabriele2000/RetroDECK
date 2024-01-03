@@ -14,7 +14,7 @@ jobs:
 
       # Circumventing this bug: https://github.com/flatpak/flatpak-builder/issues/317
       - name: Remove stuck mounts
-        run: sudo umount -f /home/ubuntu/actions-runner/_work/RetroDECK-MAME/RetroDECK-MAME/.flatpak-builder/rofiles/*
+        run: sudo umount -f /home/ubuntu/mame-runner/_work/RetroDECK-MAME/RetroDECK-MAME/.flatpak-builder/rofiles/*
         continue-on-error: true
     
       - name: Clone repo
