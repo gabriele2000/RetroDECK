@@ -44,14 +44,13 @@ modules:
     build-options:
       no-debuginfo: true
       strip: true
-      env:
-        CC: clang
-        CXX: clang++
-        LD: lld
     build-commands:
       - make
           -j echo $(nproc)
           CFLAGS+=-Wno-error=restrict
+          CC=clang
+          CXX=clang++
+          LD=lld
           USE_QTDEBUG=0 
           USE_WAYLAND=1
           USE_SYSTEM_LIB_FLAC=1
