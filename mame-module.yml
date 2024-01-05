@@ -6,12 +6,13 @@ modules:
     build-options:
       no-debuginfo: true
       strip: true
+    env:
+      CC: clang
+      CXX: clang++
+      LD: lld
     build-commands:
       - make
           -j ${FLATPAK_BUILDER_N_JOBS}
-          CC=clang
-          CXX=clang++
-          LD=lld
           CFLAGS+=-Wno-error=restrict
           USE_QTDEBUG=0 
           USE_WAYLAND=1
