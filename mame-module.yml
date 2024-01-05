@@ -3,37 +3,20 @@ modules:
   # https://sdlmame.wallyweek.org/download/
   # -j ${FLATPAK_BUILDER_N_JOBS}
   - name: mame
-    buildsystem: simple
+    no-autogen: true
+    make-args:
+      - CFLAGS+=-Wno-error=restrict
+      - USE_QTDEBUG=0 
+      - USE_WAYLAND=1
+      - USE_SYSTEM_LIB_FLAC=1
+      - SDL_INI_PATH='$$HOME/.APP_NAME;/app/share/APP_NAME/ini'
+      - LDOPTS=-Wl,-s
+      - CC=clang
+      - CXX=clang++
+      - LD=lld
     build-options:
       no-debuginfo: true
       strip: true
-    build-commands:
-      - make
-          -j 1
-          CFLAGS+=-Wno-error=restrict
-          USE_QTDEBUG=0 
-          USE_WAYLAND=1
-          USE_SYSTEM_LIB_FLAC=1
-          SDL_INI_PATH='$$HOME/.APP_NAME;/app/share/APP_NAME/ini'
-          LDOPTS=-Wl,-s
-      - install -Dm 0755 mame ${FLATPAK_DEST}/bin/mame
-      - cp COPYING ${FLATPAK_DEST}/bin/
-      - cp uismall.bdf ${FLATPAK_DEST}/bin/
-      - mkdir -p ${FLATPAK_DEST}/share/mame/
-      - cp -r artwork/ ${FLATPAK_DEST}/share/mame/
-      - cp -r bgfx/ ${FLATPAK_DEST}/share/mame/
-      - cp -r ctrlr/ ${FLATPAK_DEST}/share/mame/
-      - mkdir -p ${FLATPAK_DEST}/share/mame/docs/
-      - cp -r docs/legal/ ${FLATPAK_DEST}/share/mame/docs/
-      - cp -r docs/man/ ${FLATPAK_DEST}/share/mame/docs
-      - cp -r hash/ ${FLATPAK_DEST}/share/mame/
-      - cp -r hlsl/ ${FLATPAK_DEST}/share/mame/
-      - cp -r ini/ ${FLATPAK_DEST}/share/mame/
-      - install -Dm 0644 mame.ini ${FLATPAK_DEST}/share/mame/ini/mame.ini
-      - cp -r language/ ${FLATPAK_DEST}/share/mame/
-      - cp -r plugins/ ${FLATPAK_DEST}/share/mame/
-      - cp -r roms/ ${FLATPAK_DEST}/share/mame/
-      - cp -r samples/ ${FLATPAK_DEST}/share/mame/
     sources:
       - type: archive
         url: https://github.com/mamedev/mame/archive/refs/tags/mame0261.tar.gz
@@ -46,3 +29,23 @@ modules:
         path: mame-patches/sound.patch
       - type: patch
         path: mame-patches/ym3802.patch
+      - type: shell
+        commands:
+        - install -Dm 0755 mame ${FLATPAK_DEST}/bin/mame
+        - cp COPYING ${FLATPAK_DEST}/bin/
+        - cp uismall.bdf ${FLATPAK_DEST}/bin/
+        - mkdir -p ${FLATPAK_DEST}/share/mame/
+        - cp -r artwork/ ${FLATPAK_DEST}/share/mame/
+        - cp -r bgfx/ ${FLATPAK_DEST}/share/mame/
+        - cp -r ctrlr/ ${FLATPAK_DEST}/share/mame/
+        - mkdir -p ${FLATPAK_DEST}/share/mame/docs/
+        - cp -r docs/legal/ ${FLATPAK_DEST}/share/mame/docs/
+        - cp -r docs/man/ ${FLATPAK_DEST}/share/mame/docs
+        - cp -r hash/ ${FLATPAK_DEST}/share/mame/
+        - cp -r hlsl/ ${FLATPAK_DEST}/share/mame/
+        - cp -r ini/ ${FLATPAK_DEST}/share/mame/
+        - install -Dm 0644 mame.ini ${FLATPAK_DEST}/share/mame/ini/mame.ini
+        - cp -r language/ ${FLATPAK_DEST}/share/mame/
+        - cp -r plugins/ ${FLATPAK_DEST}/share/mame/
+        - cp -r roms/ ${FLATPAK_DEST}/share/mame/
+        - cp -r samples/ ${FLATPAK_DEST}/share/mame/
