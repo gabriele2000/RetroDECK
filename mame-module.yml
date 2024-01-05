@@ -3,6 +3,7 @@ modules:
   # https://sdlmame.wallyweek.org/download/
   # -j ${FLATPAK_BUILDER_N_JOBS}
   - name: mame
+    no-autogen: true
     make-args:
       - CFLAGS+=-Wno-error=restrict
       - USE_QTDEBUG=0 
