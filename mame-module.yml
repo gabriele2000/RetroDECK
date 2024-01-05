@@ -3,7 +3,6 @@ modules:
   # https://sdlmame.wallyweek.org/download/
   # -j ${FLATPAK_BUILDER_N_JOBS}
   - name: mame
-    no-autogen: true
     make-args:
       - CFLAGS+=-Wno-error=restrict
       - USE_QTDEBUG=0 
@@ -17,7 +16,7 @@ modules:
     build-options:
       no-debuginfo: true
       strip: true
-    build-commands:
+    post-install:
       - install -Dm 0755 mame ${FLATPAK_DEST}/bin/mame
       - cp COPYING ${FLATPAK_DEST}/bin/
       - cp uismall.bdf ${FLATPAK_DEST}/bin/
