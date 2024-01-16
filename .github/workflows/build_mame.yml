@@ -57,14 +57,14 @@ jobs:
         id: branch_name
         run: echo "BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')" >> $GITHUB_ENV
 
-      - name: Publish the flatpak in a new cooker release
+      - name: Publish the artifacts in a release
         uses: ncipollo/release-action@v1
         with:
           tag: "${{env.BRANCH_NAME}}-${{ env.buildid }}"
           body: |
             # Release Notes (Cooker)
             These are the artifact of RetroDECK MAME, commit: ${{ github.event.repository.full_name }}@${{github.sha}}.
-            On branch [${{env.BRANCH_NAME}}](https://github.com/XargonWan/RetroDECK/tree/${{env.BRANCH_NAME}}).
+            On branch [${{env.BRANCH_NAME}}](https://github.com/XargonWan/RetroDECK-MAME/tree/${{env.BRANCH_NAME}}).
 
           artifacts: "RetroDECK-MAME-Artifact.tar.gz"
           allowUpdates: true
@@ -74,6 +74,9 @@ jobs:
 
       - name: "Committing changes"
         uses: EndBug/add-and-commit@v9.1.3
+        with:
+          message: '[AUTOMATED] Updating MAME after build [skip ci]'
+          token: ${{ secrets.TRIGGER_BUILD_TOKEN }}
 
 
 
