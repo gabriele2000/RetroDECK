@@ -76,7 +76,7 @@ jobs:
         uses: EndBug/add-and-commit@v9.1.3
         with:
           message: '[AUTOMATED] Updating MAME after build [skip ci]'
-          token: ${{ secrets.TRIGGER_BUILD_TOKEN }}
+          github_token: ${{ secrets.TRIGGER_BUILD_TOKEN }}
 
 
 
