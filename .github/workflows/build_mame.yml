@@ -66,7 +66,7 @@ jobs:
       - name: Publish the artifacts in a release
         uses: ncipollo/release-action@v1
         with:
-          tag: "${{env.BRANCH_NAME}}-${{ env.buildid }}"
+          tag: "${{env.BRANCH_NAME}}-$(date +'%d%m%y')"
           body: |
             # Release Notes (Cooker)
             These are the artifact of RetroDECK MAME, commit: ${{ github.event.repository.full_name }}@${{github.sha}}.
