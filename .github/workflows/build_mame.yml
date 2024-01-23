@@ -63,10 +63,14 @@ jobs:
         id: branch_name
         run: echo "BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')" >> $GITHUB_ENV
 
+      - name: Get date
+        id: date
+        run: echo "DATE=$(date +'%d%m%y')" >> $GITHUB_ENV
+
       - name: Publish the artifacts in a release
         uses: ncipollo/release-action@v1
         with:
-          tag: "${{env.BRANCH_NAME}}-$(date +'%d%m%y')"
+          tag: "${{env.BRANCH_NAME}}-${{env.DATE}}"
           body: |
             # Release Notes (Cooker)
             These are the artifact of RetroDECK MAME, commit: ${{ github.event.repository.full_name }}@${{github.sha}}.
