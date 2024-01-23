@@ -51,20 +51,14 @@ jobs:
       #   continue-on-error: true
       #   timeout-minutes: 1440
 
-      - name: '[TEST] Create Artifact for RetroDECK'
-        run: | 
-          touch ${GITHUB_WORKSPACE}/RetroDECK-MAME-Artifact.tar.gz
-        continue-on-error: true
-        timeout-minutes: 1440
-
       - name: Set environment variable with current branch name
         run: echo "GITHUB_REF_SLUG=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
 
       - name: Get branch name
         id: branch_name
-        #run: echo "BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')" >> $GITHUB_ENV
         # TODO: I need to enhance this
-        run: echo "BRANCH_NAME=main" >> $GITHUB_ENV
+        #run: echo "BRANCH_NAME=main" >> $GITHUB_ENV
 
       - name: Get date
         id: date
