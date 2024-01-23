@@ -61,7 +61,9 @@ jobs:
 
       - name: Get branch name
         id: branch_name
-        run: echo "BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')" >> $GITHUB_ENV
+        #run: echo "BRANCH_NAME=$(echo $GITHUB_REF | sed 's|refs/heads/||')" >> $GITHUB_ENV
+        # TODO: I need to enhance this
+        run: echo "BRANCH_NAME=main" >> $GITHUB_ENV
 
       - name: Get date
         id: date
@@ -82,16 +84,13 @@ jobs:
           token: ${{ secrets.TRIGGER_BUILD_TOKEN }}
         continue-on-error: true
 
-      - name: Set up Git
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-
       - name: "Committing changes"
         uses: EndBug/add-and-commit@v9.1.3
         with:
           message: '[AUTOMATED] Updating MAME after build [skip ci]'
           github_token: ${{ secrets.TRIGGER_BUILD_TOKEN }}
+          author_name: GitHub Actions
+          author_email: actions@github.com
 
 
 
