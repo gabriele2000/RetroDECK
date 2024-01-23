@@ -46,7 +46,7 @@ jobs:
 
       - name: Create Artifact for RetroDECK
         run: | 
-          tar -czf ${GITHUB_WORKSPACE}/RetroDECK-MAME-Artifact.tar.gz -C ${GITHUB_WORKSPACE}/mame-repo .
+          tar -czf ${GITHUB_WORKSPACE}/RetroDECK-MAME-Artifact.tar.gz -C ${GITHUB_WORKSPACE}/mame-build-dir .
           hash=($(sha256sum ${GITHUB_WORKSPACE}/RetroDECK-MAME-Artifact.tar.gz))
           echo $hash > ${GITHUB_WORKSPACE}/RetroDECK-Artifact-cooker.sha
           mv -f RetroDECK-Artifact-cooker.* ${{ secrets.ARTIFACT_REPO }}
