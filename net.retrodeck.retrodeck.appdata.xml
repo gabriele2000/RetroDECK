@@ -65,39 +65,33 @@
    <project_license>GPL-3.0</project_license>
    <metadata_license>CC0-1.0</metadata_license>
    <releases>
-      <release version="0.7.7b" date="2023-02-14">
+      <release version="0.7.7b" date="2023-02-13">
          <url>https://github.com/XargonWan/RetroDECK/releases/tag/0.7.7b</url>
          <description>
             <p>Bug fixes and other changes:</p>
             <ul>
                <li>DUCKSTATION: fixed an issue with memcard folder creation</li>
-               <li>Added new system: SOLARUS</li>
-               <li>Added new engine: GZDOOM</li>
-               <li>Added new emulator: Vita3K - Reset the emulator to grap the lates changes</li>
-               <li>Added new emulator: MAME (Standalone)</li>
-               <li>PPSSPP: added hotkeys</li>
-               <li>DOLPHIN: improved wiimote pointer emulation for controllers</li>
-               <li>Added Steam Sync (with BoilR)</li>
-               <li>Quit button after emulators reset should act as an actual full quit button</li>
-               <li>Created a quit_retrodeck function to ease the quit in the scripts.</li>
-               <li>Logs folder is now in retrodeck/logs (previously was .logs)</li>
-               <li>The post update script is initializing vita3k, mame and boilr when coming from a version ealrier that 0.8.0, this don't work in cokker and must be resetted manually (for boilr reset RetroDECK)</li>
-               <li>RPCS3 is now running via shortcut (.desktop file) by default - WARN THE USERS TO MIGRATE</li>
-               <li>Added controller config for PS4 and PS5</li>
-               <li>Controller config overhaul</li>
-               <li>Removed talk names in the manifest as they're not needed anymore as enabled by default</li>
-               <li>Fixed a sync issue with the RetroDECK controller profiles</li>
-            </ul>
-            <p>Updates:</p>
-            <ul>
-               <li>General emulators refresh</li>
-               <li>Credits section</li>
-               <li>PPSSPP: updated hotkeys, check the updates in the wiki</li>
-               <li>DOLPHIN: improved wiimote pointer emulation for controllers </li>
             </ul>
          </description>
       </release>
-      <release version="0.7.5b" date="2023-12-14">
+      <release version="0.7.6b" date="2024-02-08">
+         <url>https://github.com/XargonWan/RetroDECK/releases/tag/0.7.6b</url>
+         <description>
+            <p>Changes:</p>
+            <ul>
+               <li>Added new splash screens for Lunar New Year, St. Valentines and St. Patricks, be sure to check them out!</li>
+               <li>Updated PPSSPP</li>
+               <li>PPSSPP: implemented combo hotkeys, more details in the wiki</li>
+               <li>Reworked building pipelines andautomations</li>
+               <li>Removed talk names in the manifest as they're not needed anymore as enabled by default</li>
+               <li>Fixed a sync issue with the RetroDECK controller profiles</li>
+            </ul>
+            <p>Known issues:</p>
+            <ul>
+               <li>Please check the know issues in the Wiki under General Infomration.</li>
+            </ul>
+         </description>
+      <release version="0.7.5b" date="2023-14-12">
          <url>https://github.com/XargonWan/RetroDECK/releases/tag/0.7.5b</url>
          <description>
             <p>Bug fixes and other changes:</p>
@@ -129,7 +123,7 @@
             </ul>
             <p>Known issues:</p>
             <ul>
-               <li>Please check the know issues in the Wiki under General Infomration.</li>
+               <li>Please check the know issues in the Wiki under General Infomration</li>
             </ul>
          </description>
       </release>
@@ -143,7 +137,7 @@
             </ul>
             <p>Known issues:</p>
             <ul>
-               <li>Please check the know issues in the Wiki under General Infomration.</li>
+               <li>Please check the know issues in the Wiki under General Infomration</li>
             </ul>
          </description>
       </release>
