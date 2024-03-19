@@ -44,6 +44,10 @@ jobs:
             "${GITHUB_WORKSPACE}"/mame-build-dir \
             net.retrodeck.mame.yml
 
+      - name: "Exporting dir tree"
+        id: tree
+        run: tree -H ./ > ${GITHUB_WORKSPACE}/tree.html
+
       - name: Create Artifact for RetroDECK
         run: | 
           tar -czf ${GITHUB_WORKSPACE}/RetroDECK-MAME-Artifact.tar.gz -C ${GITHUB_WORKSPACE}/mame-build-dir .
@@ -73,7 +77,7 @@ jobs:
             These are the artifact of RetroDECK MAME, commit: ${{ github.event.repository.full_name }}@${{github.sha}}.
             On branch [${{env.BRANCH_NAME}}](https://github.com/XargonWan/RetroDECK-MAME/tree/${{env.BRANCH_NAME}}).
 
-          artifacts: "RetroDECK-MAME-Artifact.tar.gz"
+          artifacts: "RetroDECK-MAME-Artifact.tar.gz, tree.html"
           allowUpdates: true
           makeLatest: true
           token: ${{ secrets.TRIGGER_BUILD_TOKEN }}
