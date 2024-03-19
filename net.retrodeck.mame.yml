@@ -51,10 +51,12 @@ modules:
           CFLAGS+=-Wno-error=restrict
           USE_QTDEBUG=0 
           USE_WAYLAND=1
+          TOOLS=1
           USE_SYSTEM_LIB_FLAC=1
           SDL_INI_PATH='$$HOME/.APP_NAME;/app/share/APP_NAME/ini'
           LDOPTS=-Wl,-s
       - install -Dm 0755 mame ${FLATPAK_DEST}/bin/mame
+      - install -Dm 0755 chdman ${FLATPAK_DEST}/bin/chdman
       - cp COPYING ${FLATPAK_DEST}/bin/
       - cp uismall.bdf ${FLATPAK_DEST}/bin/
       - mkdir -p ${FLATPAK_DEST}/share/mame/
