@@ -1242,6 +1242,29 @@ modules:
 
   # Ryujinx Appimage - END
 
+  # PortMaster - START
+
+  - name: portmaster
+    buildsystem: simple
+    build-commands:
+      - |
+        chmod +x ./Install.PortMaster.sh 
+        ./Install.PortMaster.sh --nox11 --accept --target PortMaster
+        sed -i 's#/roms/ports/PortMaster#/var/config/PortMaster#g' PortMaster/PortMaster.sh # set controlfolder in /var/config/PortMaster
+        sed -i '/printf "\\\\033c" > \$CUR_TTY/d' PortMaster/PortMaster.sh                  # remove tty cleanup
+        sed -i 's/ > $CUR_TTY//g' PortMaster/PortMaster.sh                                  # removing the tty redirection
+        sed -i 's/ESUDO="sudo"/ESUDO=""/' PortMaster/PortMaster.sh                          # remove $ESDUO as we cannot invoke sudo in flatpak
+        sed -i '/\/dev\/\*/d' ports/*/*.sh                                                  # remove all the lines that are writing on /dev/something as we cannot do that in flatpak
+        sed -i '/systemctl/d' ports/*/*.sh                                                  # remove all the lines that uses systemctl commands as we cannot use them in flatpak
+        mv PortMaster ${FLATPAK_DEST}/retrodeck/PortMaster
+        mv PortMaster.sh ${FLATPAK_DEST}/bin/PortMaster.sh
+    sources:
+      - type: file
+        url: https://github.com/PortsMaster/PortMaster-GUI/releases/download/2024.03.26-1245/Install.PortMaster.sh
+        commit: 0bdd136e9d919c269796937ca14cadafacbedc52c3b1ba38569748d7046ba96d
+
+  # PortMaster - END
+
   # External manifests end
 
   - name: retrodeck
