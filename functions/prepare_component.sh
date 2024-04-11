@@ -571,7 +571,7 @@ prepare_component() {
     fi
   fi
 
-  if [[ "$component" =~ ^(ryujunx|Ryujinx|all)$ ]]; then
+  if [[ "$component" =~ ^(ryujinx|Ryujinx|all)$ ]]; then
     # NOTE: for techincal reasons the system folder of Ryujinx IS NOT a sumlink of the bios/switch/keys as not only the keys are located there
     # When RetroDECK starts there is a "manage_ryujinx_keys" function that symlinks the keys only in Rryujinx/system.
     if [[ "$action" == "reset" ]]; then # Run reset-only commands
@@ -594,6 +594,7 @@ prepare_component() {
         rm -rf /var/config/Ryujinx
         create_dir /var/config/Ryujinx/system
         cp -fv $emuconfigs/ryujinx/Config.json $ryujinxconf
+        cp -fvr $emuconfigs/ryujinx/profiles /var/config/Ryujinx/
         log d "Replacing placeholders in \"$ryujinxconf\""
         sed -i 's#RETRODECKHOMEDIR#'$rdhome'#g' "$ryujinxconf"
         log i "Linking switch nand/saves folder"
@@ -602,6 +603,7 @@ prepare_component() {
         dir_prep "$saves_folder/switch/ryujinx/nand" "/var/config/Ryujinx/bis"
         dir_prep "$saves_folder/switch/ryujinx/sdcard" "/var/config/Ryujinx/sdcard"
         dir_prep "$bios_folder/switch/firmware" "/var/config/Ryujinx/bis/system/Contents/registered"
+        dir_prep "$bios_folder/switch/keys" "/var/config/Ryujinx/system"
       fi
     fi
     # if [[ "$action" == "reset" ]] || [[ "$action" == "postmove" ]]; then # Run commands that apply to both resets and moves
@@ -826,7 +828,10 @@ prepare_component() {
 
     create_dir "/var/config/boilr"
     cp -fvr "/app/libexec/steam-sync/config.toml" "/var/config/boilr"
-    
+  fi
+
+  if [[ ! "$component" =~ ^(retrodeck|es-de|ES-DE|retroarch|RetroArch|citra|citra-emu|Citra|cemu|Cemu|dolphin|dolphin-emu|Dolphin|duckstation|Duckstation|melonds|melonDS|MelonDS|pcsx2|PCSX2|pico8|pico-8|ppsspp|PPSSPP|primehack|Primehack|rpcs3|RPCS3|ryujinx|Ryujinx|yuzu|Yuzu|xemu|XEMU|vita3k|Vita3K|mame|MAME|gzdoom|GZDOOM|boilr|BOILR|)$ ]]; then
+    log e "Supplied component $component not found, not resetting"
   fi
 
   # Update presets for all components after any reset or move

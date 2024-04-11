@@ -236,8 +236,8 @@ dir_prep() {
 
   # Call me with:
   # dir prep "real dir" "symlink location"
-  real="$1"
-  symlink="$2"
+  real="$(realpath -s $1)"
+  symlink="$(realpath -s $2)"
 
   log d "Preparing directory $symlink in $real"
 
@@ -618,43 +618,6 @@ easter_eggs() {
   fi
 
   cp -f "$new_splash_file" "$current_splash_file" # Deploy assigned splash screen
-}
-
-manage_ryujinx_keys() {
-  # This function checks if Switch keys are existing and symlinks them inside the Ryujinx system folder
-  # If the symlinks are broken it recreates them
-
-  log i "Checking Ryujinx Switch keys."
-  local ryujinx_system="/var/config/Ryujinx/system"  # Set the path to the Ryujinx system folder
-  # Check if the keys folder exists
-  if [ -d "$bios_folder/switch/keys" ]; then
-      # Check if there are files in the keys folder
-      if [ -n "$(find "$bios_folder/switch/keys" -maxdepth 1 -type f)" ]; then
-          # Iterate over each file in the keys folder
-          for file in "$bios_folder/switch/keys"/*; do
-              local filename=$(basename "$file")
-              local symlink="$ryujinx_system/$filename"
-              
-              # Check if the symlink exists and is valid
-              if [ -L "$symlink" ] && [ "$(readlink -f "$symlink")" = "$file" ]; then
-                  log i "Found \"$symlink\" and it's a valid symlink."
-                  continue  # Skip if the symlink is already valid
-              fi
-              
-              # Remove broken symlink or non-symlink file
-              log w "Found \"$symlink\" but it's not a valid symlink. Repairing it"
-              [ -e "$symlink" ] && rm "$symlink"
-
-              # Create symlink
-              ln -s "$file" "$symlink"
-              log i "Created symlink: \"$symlink\""
-          done
-      else
-          log w "No files found in $bios_folder/switch/keys. Continuing..."
-      fi
-  else
-      log e "Directory $bios_folder/switch/keys does not exist. Something is wrong with your RetroDECK installation. Continuing but Ryujinx will not be able to run any game."
-  fi
 }
 
 ponzu() {

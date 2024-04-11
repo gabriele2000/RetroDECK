@@ -119,8 +119,7 @@ configurator_welcome_dialog() {
     "Open Emulator" "Launch and configure each emulators settings (for advanced users)" \
     "RetroDECK: Tools" "Compress games, move RetroDECK and install optional features" \
     "RetroDECK: Troubleshooting" "Backup data, perform BIOS / multi-disc file checks checks and emulator resets" \
-    "RetroDECK: About" "Show additional information about RetroDECK" \
-    "Sync with Steam" "Sync with Steam all the favorites games")
+    "RetroDECK: About" "Show additional information about RetroDECK")
   fi
 
   choice=$(zenity --list --title="RetroDECK Configurator Utility" --cancel-label="Quit" \
@@ -528,7 +527,7 @@ configurator_open_emulator_dialog() {
 
   "Ryujinx" )
     log i "Configurator: \"$emulator\""
-    ryujinx-rdwrapper.sh
+    Ryujinx.sh
   ;;
 
   "Vita3K" )
@@ -791,26 +790,36 @@ configurator_compress_single_game_dialog() {
     if [[ ! $compatible_compression_format == "none" ]]; then
       local post_compression_cleanup=$(configurator_compression_cleanup_dialog)
       (
-      echo "# Compressing $(basename "$file") to $compatible_compression_format format"
+      echo "# Compressing $(basename "$file") to $compatible_compression_format format" # This updates the Zenity dialog
+      log i "Compressing $(basename "$file") to $compatible_compression_format format"
       compress_game "$compatible_compression_format" "$file" "$system"
       if [[ $post_compression_cleanup == "true" ]]; then # Remove file(s) if requested
-        if [[ "$file" == *".cue" ]]; then
-          local cue_bin_files=$(grep -o -P "(?<=FILE \").*(?=\".*$)" "$file")
-          local file_path=$(dirname "$(realpath "$file")")
-          while IFS= read -r line
-          do
-            rm -f "$file_path/$line"
-          done < <(printf '%s\n' "$cue_bin_files")
-          rm -f $(realpath "$file")
+        if [[ -f "${file%.*}.$compatible_compression_format" ]]; then
+          log i "Performing post-compression file cleanup"
+          if [[ "$file" == *".cue" ]]; then
+            local cue_bin_files=$(grep -o -P "(?<=FILE \").*(?=\".*$)" "$file")
+            local file_path=$(dirname "$(realpath "$file")")
+            while IFS= read -r line
+            do
+              log i "Removing file $file_path/$line"
+              rm -f "$file_path/$line"
+            done < <(printf '%s\n' "$cue_bin_files")
+            log i "Removing file $(realpath $file)"
+            rm -f $(realpath "$file")
+          else
+            log i "Removing file $(realpath $file)"
+            rm -f "$(realpath "$file")"
+          fi
         else
-          rm -f "$(realpath "$file")"
+          log i "Compressed file ${file%.*}.$compatible_compression_format not found, skipping original file deletion"
+          configurator_generic_dialog "RetroDECK Configurator - RetroDECK: Compression Tool" "A compressed version of the file was not found, skipping deletion."
         fi
       fi
       ) |
       zenity --icon-name=net.retrodeck.retrodeck --progress --no-cancel --pulsate --auto-close \
       --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
       --title "RetroDECK Configurator Utility - Compression in Progress"
-      configurator_generic_dialog "RetroDECK Configurator - RetroDECK: Compression Tool" "The compression process is complete!"
+      configurator_generic_dialog "RetroDECK Configurator - RetroDECK: Compression Tool" "The compression process is complete."
       configurator_compression_tool_dialog
 
     else
@@ -906,21 +915,31 @@ configurator_compress_multiple_games_dialog() {
       local system=$(echo "$file" | grep -oE "$roms_folder/[^/]+" | grep -oE "[^/]+$")
       local compression_format=$(find_compatible_compression_format "$file")
       echo "# Compressing $(basename "$file") into $compression_format format" # Update Zenity dialog text
+      log i "Compressing $(basename "$file") into $compression_format format"
       progress=$(( 100 - (( 100 / "$total_games_to_compress" ) * "$games_left_to_compress" )))
       echo $progress
       games_left_to_compress=$((games_left_to_compress-1))
+      log i "Games left to compress: $games_left_to_compress"
       compress_game "$compression_format" "$file" "$system"
       if [[ $post_compression_cleanup == "true" ]]; then # Remove file(s) if requested
-        if [[ "$file" == *".cue" ]]; then
-          local cue_bin_files=$(grep -o -P "(?<=FILE \").*(?=\".*$)" "$file")
-          local file_path=$(dirname "$(realpath "$file")")
-          while IFS= read -r line
-          do
-            rm -f "$file_path/$line"
-          done < <(printf '%s\n' "$cue_bin_files")
-          rm -f $(realpath "$file")
+        if [[ -f "${file%.*}.$compatible_compression_format" ]]; then
+          if [[ "$file" == *".cue" ]]; then
+            local cue_bin_files=$(grep -o -P "(?<=FILE \").*(?=\".*$)" "$file")
+            local file_path=$(dirname "$(realpath "$file")")
+            while IFS= read -r line
+            do
+              log i "Removing file $file_path/$line"
+              rm -f "$file_path/$line"
+            done < <(printf '%s\n' "$cue_bin_files")
+            log i "Removing file $(realpath $file)"
+            rm -f $(realpath "$file")
+          else
+            log i "Removing file $(realpath $file)"
+            rm -f "$(realpath "$file")"
+          fi
         else
-          rm -f "$(realpath "$file")"
+          log i "Compressed file ${file%.*}.$compatible_compression_format not found, skipping original file deletion"
+          configurator_generic_dialog "RetroDECK Configurator - RetroDECK: Compression Tool" "Compression of $(basename $file) failed, skipping deletion."
         fi
       fi
     done
@@ -939,7 +958,7 @@ configurator_compression_cleanup_dialog() {
   zenity --icon-name=net.retrodeck.retrodeck --question --no-wrap --cancel-label="No" --ok-label="Yes" \
   --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
   --title "RetroDECK Configurator - RetroDECK: Compression Tool" \
-  --text="Do you want to remove old files after they are compressed?\n\nClicking \"No\" will leave all files behind which will need to be cleaned up manually and may result in game duplicates showing in the RetroDECK library."
+  --text="Do you want to remove old files after they are compressed?\n\nClicking \"No\" will leave all files behind which will need to be cleaned up manually and may result in game duplicates showing in the RetroDECK library.\n\nPlease make sure you have a backup of your ROMs before using automatic cleanup!"
   local rc=$? # Capture return code, as "Yes" button has no text value
   if [[ $rc == "0" ]]; then # If user clicked "Yes"
     echo "true"
