@@ -188,6 +188,7 @@ changelog_dialog() {
 
 get_cheevos_token_dialog() {
   # This function will return a RetroAchvievements token from a valid username and password, will return "login failed" otherwise
+  # the return is a string iin this format: "username,password,1234567890"
   # USAGE: get_cheevos_token_dialog
 
   local cheevos_info=$(rd_zenity --forms --title="Cheevos" \
