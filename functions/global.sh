@@ -2,6 +2,9 @@
 
 # This file is containing some global function needed for the script such as the config file tools
 
+# pathing the retrodeck components provided libraries
+export LD_LIBRARY_PATH="/app/retrodeck/lib:/app/retrodeck/lib/debug:/app/retrodeck/lib/pkgconfig:$LD_LIBRARY_PATH"
+
 source /app/libexec/050_save_migration.sh
 source /app/libexec/checks.sh
 source /app/libexec/compression.sh
