@@ -620,6 +620,9 @@
     "pokemini": {
       "name": "Nintendo Pokémon Mini"
     },
+    "portmaster": {
+        "name": "PortMaster"
+    },
     "ports": {
       "name": "Ports"
     },
@@ -972,12 +975,12 @@
         }
       ]
     },
-      "ruffle": {
-        "description": "Flash Games emulator",
-        "name" : "Ruffle",
-        "system" : "flash",
-        "launch": "ruffle-rd-wrapper.sh"
-      },
+    "ruffle": {
+      "description": "Flash Games emulator",
+      "name" : "Ruffle",
+      "system" : "flash",
+      "launch": "ruffle-rd-wrapper.sh"
+    },
     "melonds": {
       "description": "MelonDS Nintendo DS Emulator",
       "name": "melonds",
@@ -1105,6 +1108,12 @@
       "description": "ES-DE Emulation Frontend",
       "name": "ES-DE",
       "launch": "es-de"
+    },
+    "portmaster": {
+        "description": "PortMaster",
+        "name": "PortMaster",
+        "system": "portmaster",
+        "launch": "PortMaster"
     }
   }
 }

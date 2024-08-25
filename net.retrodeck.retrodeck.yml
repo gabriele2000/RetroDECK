@@ -524,6 +524,26 @@ modules:
         url: https://github.com/RetroDECK/MAME/releases/latest/download/RetroDECK-MAME-Artifact.tar.gz
         sha256: RETRODECKMAMELATEST
 
+  # PortMaster
+
+  - name: PortMaster
+    buildsystem: simple
+    build-commands:
+      - mkdir -p "${FLATPAK_DEST}/retrodeck/PortMaster/"
+      - cp retrodeck.portmaster.zip "${FLATPAK_DEST}/retrodeck/PortMaster.zip"
+      - install -Dm755 "PortMaster" "${FLATPAK_DEST}/bin/PortMaster"
+      - ls -lah "${FLATPAK_DEST}/bin"
+    sources:
+      - type: file
+        url: https://github.com/PortsMaster/PortMaster-GUI/releases/download/2024.08.24-1111/retrodeck.portmaster.zip
+        sha256: 20a78192995a55ffdfdf4cd9343897c6d1ef50351a8800d188e084f90a847726
+      - type: script
+        commands:
+          - |
+            #!/bin/bash
+            "/var/data/PortMaster/PortMaster.sh" "$@"
+        dest-filename: PortMaster
+
   # ES-DE
 
   - name: ES-DE
