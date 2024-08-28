@@ -80,6 +80,15 @@ prepare_component() {
     fi
   fi
 
+  if [[ "$component" =~ ^(steam_rom_manager|all)$ ]]; then
+  component_found="true"
+    log i "----------------------"
+    log i "Prepearing Steam ROM Manager"
+    log i "----------------------"
+    
+    python3 /app/libexec/steam-sync/resetsync.py
+  fi
+
   if [[ "$component" =~ ^(retroarch|all)$ ]]; then
   component_found="true"
     log i "--------------------------------"
