@@ -888,6 +888,26 @@ quit_retrodeck() {
 start_retrodeck() {
   splash_screen # Check if today has a surprise splashscreen and load it if so
   ponzu
+
+  # if steam sync is on do the magic
+  if [[ $steam_sync == "true" ]]; then
+  (
+  #python3 /app/libexec/steam-sync/steam-sync.py #TODO: clean me
+  source /app/libexec/steam-sync/steam-sync.sh
+  start_config
+  addToSteam "$(ls "$rdhome/ES-DE/gamelists/")"
+  log "i" "Finished syncing with Steam"
+  ) |
+  zenity --progress \
+    --title="Syncing with Steam" \
+    --window-icon="/app/share/icons/hicolor/scalable/apps/net.retrodeck.retrodeck.svg" \
+    --text="Syncing favorite games with Steam, please wait." \
+    --percentage=25 \
+    --pulsate \
+    --auto-close \
+    --auto-kill
+  fi
+
   log i "Starting RetroDECK v$version"
   es-de
 }
