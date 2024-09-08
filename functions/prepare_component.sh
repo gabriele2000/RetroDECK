@@ -80,6 +80,21 @@ prepare_component() {
     fi
   fi
 
+  if [[ "$component" =~ ^(steam-rom-manager|all)$ ]]; then
+  component_found="true"
+    log i "----------------------"
+    log i "Prepearing Steam ROM Manager"
+    log i "----------------------"
+    
+    local srm_path="/var/config/steam-rom-manager/userData"
+    create_dir -d $srm_path
+    cp -fv "$config/steam-rom-manager/"*.json $srm_path
+
+    log i "Updating steamDirectory and romDirectory lines in $srm_path/userSettings.json"
+    jq '.environmentVariables.steamDirectory = "'$HOME'/.steam/steam"' $srm_path/userSettings.json" > tmp.json && mv tmp.json $srm_path/userSettings.json"
+    jq '.environmentVariables.romsDirectory = "'$rdhome'/.sync"' $srm_path/userSettings.json > tmp.json && mv tmp.json $srm_path/userSettings.json
+  fi
+
   if [[ "$component" =~ ^(retroarch|all)$ ]]; then
   component_found="true"
     log i "--------------------------------"
