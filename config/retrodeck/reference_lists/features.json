@@ -629,6 +629,9 @@
     "ps3": {
       "name": "Sony PlayStation 3"
     },
+    "ps4": {
+      "name": "Sony PlayStation 4"
+    },
     "psp": {
       "name": "Sony PlayStation Portable"
     },
@@ -1070,6 +1073,12 @@
       "ponzu": true,
       "abxy_button": true
     },
+    "shadps4": {
+      "description": "PS4 Emulator for Linux",
+      "name": "shadps4",
+      "system": "ps4",
+      "launch": "shadps4-qt"
+    },
     "dolphin": {
       "name": "Dolphin",
       "description": "Dolphin Wii and GameCube Emulator",
@@ -1133,6 +1142,11 @@
       "name": "ES-DE",
       "url": "https://retrodeck.readthedocs.io/en/latest/wiki_es_de/esde-guide/.",
       "launch": "es-de"
+    },
+    "steam-rom-manager": {
+      "description": "Steam ROM Manager (used to sync RetroDECK favorites with Steam)",
+      "name": "Steam ROM Manager",
+      "launch": "steam-rom-manager"
     }
   }
 }
