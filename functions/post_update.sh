@@ -433,7 +433,9 @@ post_update() {
     # Placeholder for version 0.9.0b
 
     set_setting_value "$raconf" "libretro_info_path" "/var/config/retroarch/cores" "retroarch"
+    prepare_component "reset" "shadps4"
     prepare_component "reset" "ruffle"
+    prepare_component "reset" "steam-rom-manager"
     update_rd_conf
 
   # TODO: check this
