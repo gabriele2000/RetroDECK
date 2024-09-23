@@ -80,6 +80,22 @@ prepare_component() {
     fi
   fi
 
+  if [[ "$component" =~ ^(steam-rom-manager|all)$ ]]; then
+  component_found="true"
+    log i "-----------------------------"
+    log i "Prepearing Steam ROM Manager"
+    log i "-----------------------------"
+    
+    local srm_userdata="/var/config/steam-rom-manager/userData"
+    create_dir -d "/var/config/steam-rom-manager"
+    create_dir -d "$srm_userdata"
+    cp -fv "$config/steam-rom-manager/"*.json $srm_userdata
+
+    log i "Updating steamDirectory and romDirectory lines in $srm_userdata/userSettings.json"
+    jq '.environmentVariables.steamDirectory = "'$HOME'/.steam/steam"' "$srm_userdata/userSettings.json" > "$srm_userdata/tmp.json" && mv -f "$srm_userdata/tmp.json" "$srm_userdata/userSettings.json"
+    jq '.environmentVariables.romsDirectory = "'$rdhome'/.sync"' "$srm_userdata/userSettings.json" > "$srm_userdata/tmp.json" && mv -f "$srm_userdata/tmp.json" "$srm_userdata/userSettings.json"
+  fi
+
   if [[ "$component" =~ ^(retroarch|all)$ ]]; then
   component_found="true"
     log i "--------------------------------"
@@ -857,6 +873,16 @@ prepare_component() {
     sed -i 's#RETRODECKSAVESDIR#'$saves_folder'#g' "/var/config/gzdoom/gzdoom.ini" # This is an unfortunate one-off because set_setting_value does not currently support JSON
   fi
 
+  if [[ "$component" =~ ^(shadps4|all)$ ]]; then
+  component_found="true"
+    # This is just a placeholder script to test the emulator's flow
+    log i "----------------------"
+    log i "Prepearing SHADPS4"
+    log i "----------------------"
+
+    # TODO: plceholder
+  fi
+  
   if [[ "$component" =~ ^(portmaster|all)$ ]]; then
   component_found="true"
     # TODO: MultiUser
@@ -887,7 +913,16 @@ prepare_component() {
     if [[ "$action" == "postmove" ]]; then # Run only post-move commands
       dir_prep "$saves_folder/flash" "/var/data/ruffle/SharedObjects/localhost/$roms_folder/flash"
     fi
+  fi
     
+  if [[ "$component" =~ ^(gzdoom|all)$ ]]; then
+  component_found="true"
+    # This is just a placeholder script to test the emulator's flow
+    log i "----------------------"
+    log i "Prepearing SHADPS4"
+    log i "----------------------"
+
+    # TODO: plceholder
   fi
 
   if [[ $component_found == "false" ]]; then
