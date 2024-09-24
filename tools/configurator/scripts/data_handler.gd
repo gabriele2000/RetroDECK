@@ -34,12 +34,15 @@ func load_base_data() -> AppData:
 				var emulator = Emulator.new()
 				emulator.name = emulator_data["name"]
 				emulator.description = emulator_data["description"]
-				emulator.url = emulator_data["url"]
+<<<<<<< HEAD
+=======
+				#emulator.url = emulator_data["url"]
 				#emulator.system = emulator_data["system"]
 				emulator.launch = emulator_data["launch"]
+>>>>>>> be95a1bf935fae24a2ab447f99022a39ae7a896a
 				if emulator_data.has("properties"):
 					for property_data in emulator_data["properties"]:
-						#print (emulator,"----",property_data)
+						print (emulator,"----",property_data)
 						var property = EmulatorProperty.new()
 						if property_data.has("cheevos"):
 							property.cheevos = property_data.get("cheevos",true)
@@ -61,6 +64,7 @@ func load_base_data() -> AppData:
 				if core_data.has("properties"):
 					for property_data in core_data["properties"]:
 						#print (core.name,"----",property_data)
+						# inherit from RetroArch
 						var property = CoreProperty.new()
 						property.cheevos = true
 						property.cheevos_hardcore = true
@@ -76,19 +80,19 @@ func load_base_data() -> AppData:
 						core.properties.append(property)	
 				cores[key] = core
 				
+				emulators[key] = emulator
 			var app_dict = AppData.new()
 			app_dict.about_links = about_links
 			app_dict.emulators = emulators
-			app_dict.cores = cores
 			return app_dict
 		else:
-			print("Error parsing JSON")
+			class_functions.logger("d","Error parsing JSON ")
 	else:
-		print("Error opening file")
+		class_functions.logger("d","Error opening file: " + file)
 		get_tree().quit()
 	return null
 
-func save_base_data(app_dict: AppData):
+func save_base_data(app_dict: AppData): # was apP_data but gave warning
 	var file = FileAccess.open(data_file_path, FileAccess.READ)
 	var existing_data = {}
 	if file:
@@ -99,18 +103,18 @@ func save_base_data(app_dict: AppData):
 		file.close()
 	else:
 		print("File not found. Creating a new one.")		
-		#var about_links ={}
-		var about_links_new = Link.new()
+		var about_links = {}
 		for key in app_dict.about_links.keys():
 			var link = app_dict.about_links[key]
-			about_links_new[key] = {
+			about_links[key] = {
 				"name": link.name,
 				"url": link.url,
 				"description": link.description
 			}
+		
 	var new_data_dict = {}
-	#var about_links = {}
-	var about_links = Link.new()
+	# Convert about_links to a dictionary
+	var about_links = {}
 	for key in app_dict.about_links.keys():
 		var link = app_dict.about_links[key]
 		about_links[key] = {
@@ -118,6 +122,8 @@ func save_base_data(app_dict: AppData):
 			"url": link.url,
 			"description": link.description
 	}
+
+	# Convert emulators to a dictionary
 	var emulators = {}
 	for key in app_dict.emulators.keys():
 		var emulator = app_data.emulators[key]
@@ -127,16 +133,16 @@ func save_base_data(app_dict: AppData):
 				#"standalone": property.standalone,
 				"abxy_button": {"status": property.abxy_button}
 		})
+
 		emulators[key] = {
 			"name": emulator.name,
 			"description": emulator.description,
-			"launch": emulator.launch,
-			"system": emulator.system,
-			"url": emulator.url,
 			"properties": properties
 		}
+
 	new_data_dict["about_links"] = about_links
 	new_data_dict["emulators"] = emulators
+
 	# Merge existing data with new data
 	for key in new_data_dict.keys():
 		if existing_data.has(key):
@@ -148,6 +154,7 @@ func save_base_data(app_dict: AppData):
 				existing_dict[sub_key] = new_dict[sub_key]
 		else:
 			existing_data[key] = new_data_dict[key]
+
 	# Serialize the combined data to JSON
 	#var json_text = JSON.new().stringify(existing_data, "\t")
 	#var json_text = json.stringify(existing_data, "\t")
@@ -157,7 +164,6 @@ func save_base_data(app_dict: AppData):
 	file = FileAccess.open(data_file_path, FileAccess.WRITE)
 	file.store_string(json_text)
 	file.close()
-	print("Data appended successfully")
 	
 # Function to modify an existing link
 func modify_link(key: String, new_name: String, new_url: String, new_description: String):
@@ -174,14 +180,13 @@ func modify_link(key: String, new_name: String, new_url: String, new_description
 		print("Link not found")
 
 # Function to modify an existing emulator
-func modify_emulator(key: String, new_name: String, new_launch: String, new_description: String, new_properties: Array):
+func modify_emulator(key: String, new_name: String, new_description: String, new_properties: Array):
 	#data_handler.modify_emulator_test()
 	var app_dict = load_base_data() # was app_data
 	if app_dict and app_dict.emulators.has(key):
 		var emulator = app_dict.emulators[key]
 		emulator.name = new_name
 		emulator.description = new_description
-		emulator.launch = new_launch
 		
 		# Update properties
 		emulator.properties.clear()
@@ -191,7 +196,9 @@ func modify_emulator(key: String, new_name: String, new_launch: String, new_desc
 			new_property.abxy_button = property.abxy_button
 			new_property.ask_to_exit = property.ask_to_exit
 			new_property.cheevos = property.cheevos
+			
 			emulator.properties.append(new_property)
+
 		app_dict.emulators[key] = emulator
 		save_base_data(app_dict)
 		print("Emulator modified successfully")
@@ -206,10 +213,10 @@ func add_emulator() -> void:
 	link.url = "https://example.com"
 	link.description = "An example description."
 	app_data.about_links["example_site"] = link
+
 	var emulator = Emulator.new()
-	emulator.name = "Example System"
+	emulator.name = "Example Emulator"
 	emulator.description = "An example emulator."
-	emulator.launch = "launcher"
 	var property = EmulatorProperty.new()
 	#property.standalone = true
 	property.abxy_button = false
@@ -219,39 +226,40 @@ func add_emulator() -> void:
 	
 func modify_emulator_test() -> void:
 	data_handler.modify_link("example_site", "Updated Site", "https://updated-example.com", "Updated description.")
+
+
 	var new_properties = []
 	var new_property = EmulatorProperty.new()
 	#new_property.standalone = false
 	new_property.abxy_button = true
 	new_properties.append(new_property)
-	data_handler.modify_emulator("example_emulator", "Updated System", "launcher", "Updated description",  new_properties)	
+
+	data_handler.modify_emulator("example_emulator", "Updated Emulator", "Updated description",  new_properties)
+	
 
 func parse_config_to_json(file_path: String) -> Dictionary:
 	var config = {}
 	var current_section = ""
+
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
-		print("Failed to open file")
+		class_functions.logger("e","Failed to open file: " + file_path)
 		return config
-
 	while not file.eof_reached():
 		var line = file.get_line().strip_edges()
+		
 		if line.begins_with("[") and line.ends_with("]"):
-			# Start a new section
 			current_section = line.substr(1, line.length() - 2)
 			config[current_section] = {}
 		elif line != "" and not line.begins_with("#"):
-			# Add key-value pair to the current section
 			var parts = line.split("=")
 			if parts.size() == 2:
 				var key = parts[0].strip_edges()
 				var value = parts[1].strip_edges()	
-				# Convert value to proper type
 				if value == "true":
 					value = true
 				elif value == "false":
 					value = false	
-					
 				if key == "version":
 					config[key] = value
 				else:
@@ -259,8 +267,10 @@ func parse_config_to_json(file_path: String) -> Dictionary:
 						config[key] = value
 					else:
 						config[current_section][key] = value
+	
 	file.close()
 	return config
+	
 
 func config_save_json(config: Dictionary, json_file_path: String) -> void:
 	#var json = JSON.new()
@@ -271,4 +281,93 @@ func config_save_json(config: Dictionary, json_file_path: String) -> void:
 		file.store_string(json_string)
 		file.close()
 	else:
-		print("Failed to open JSON file for writing")
+		class_functions.logger("e", "File not found: %s" % json_file_path)
+
+func read_cfg_file(file_path: String) -> Array:
+	var lines: Array = []
+	var file: FileAccess = FileAccess.open(file_path, FileAccess.ModeFlags.READ)
+	if file:
+		while not file.eof_reached():
+			var line: String = file.get_line()
+			lines.append(line)
+		file.close()
+	else:
+		class_functions.logger("e", "File not found: %s" % file_path)
+	return lines
+
+func write_cfg_file(file_path: String, lines: Array, changes: Dictionary) -> void:
+	var file: FileAccess = FileAccess.open(file_path, FileAccess.ModeFlags.WRITE)
+	var current_section: String = ""
+	var line_count: int = lines.size()
+	for i in line_count:
+		var line: String = lines[i]
+		var trimmed_line: String = line.strip_edges()
+		if trimmed_line.begins_with("[") and trimmed_line.ends_with("]"):
+			current_section = trimmed_line.trim_prefix("[").trim_suffix("]")# trimmed_line.trim_prefix("["].trim_suffix("]")
+			file.store_line(line)
+		elif "=" in trimmed_line and current_section in changes:
+			var parts: Array = trimmed_line.split("=", false)
+			if parts.size() == 2:
+				var key: String = parts[0].strip_edges()
+				var original_value: String = parts[1].strip_edges()
+				if key in changes[current_section]:
+					var new_value: String = changes[current_section][key]
+					if new_value != original_value:
+						file.store_line("%s=%s" % [key, new_value])
+						class_functions.logger("i", "Changed %s in section [%s] from %s to %s" % [key, current_section, original_value, new_value])
+					else:
+						file.store_line(line)
+				else:
+					file.store_line(line)
+			else:
+				file.store_line(line)
+		else:
+			file.store_line(line)
+		if i == line_count - 2:
+			break
+	file.close()
+
+func change_cfg_value(file_path: String, system: String, section: String, new_value: String) -> Array:
+	var lines: Array = read_cfg_file(file_path)
+	var parameters: Array =[system, section]
+	var changes: Dictionary = {}
+	changes[section] = {system: new_value}
+	class_functions.logger("i", "Change: System: %s Section %s New Value: %s" % [system, section, new_value])
+	write_cfg_file(file_path, lines, changes)
+	return parameters
+
+func change_all_cfg_values(file_path: String, systems: Dictionary, section: String, new_value: String) -> Array:
+	var lines: Array = read_cfg_file(file_path)
+	var parameters: Array =[systems, section]
+	var changes: Dictionary = {}
+	var current_section: String
+	for line in lines:
+		var trimmed_line: String = line.strip_edges()
+		if trimmed_line.begins_with("[") and trimmed_line.ends_with("]"):
+			current_section = trimmed_line.trim_prefix("[").trim_suffix("]")
+			if current_section == section:
+				changes[current_section] = {}
+		elif "=" in trimmed_line and current_section == section:
+			var parts: Array = trimmed_line.split("=", false)
+			if parts.size() >= 2:
+				var key: String = parts[0].strip_edges()
+				changes[section][key] = new_value
+				class_functions.logger("i", "Change: Systems: %s Section %s New Value: %s" % [systems, section, new_value])
+	write_cfg_file(file_path, lines, changes)
+	return parameters
+
+func get_elements_in_section(file_path: String, section: String) -> Dictionary:
+	var lines: Array = read_cfg_file(file_path)
+	var elements: Dictionary = {}
+	var current_section: String = ""
+	for line in lines:
+		var trimmed_line: String = line.strip_edges()
+		if trimmed_line.begins_with("[") and trimmed_line.ends_with("]"):
+			current_section = trimmed_line.trim_prefix("[").trim_suffix("]")
+		elif "=" in trimmed_line and current_section == section:
+			var parts: Array = trimmed_line.split("=", false)
+			if parts.size() >= 2:
+				var key: String = parts[0].strip_edges()
+				var value: String = parts[1].strip_edges()
+				elements[key] = value
+	return elements
