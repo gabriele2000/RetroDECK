@@ -1,4 +1,4 @@
-class_name ClassFunctions 
+class_name ClassFunctions extends Control
 
 extends Control
 var log_result: Dictionary

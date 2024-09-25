@@ -17,6 +17,21 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qrkee")
 
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "This is a list of problematic BIOS?
+Very multiline text
+Why do we use it?
+
+PS3 BIOS IS VERY BAD
+I'm not sure what else?"
+
 [node name="Table" type="Tree" parent="."]
 unique_name_in_owner = true
 clip_contents = false
@@ -31,6 +46,4 @@ theme_override_font_sizes/font_size = 16
 theme_override_styles/panel = SubResource("StyleBoxFlat_8e2dh")
 columns = 5
 column_titles_visible = true
-allow_reselect = true
-allow_rmb_select = true
 select_mode = 1

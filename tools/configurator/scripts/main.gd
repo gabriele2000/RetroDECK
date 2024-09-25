@@ -5,6 +5,11 @@ var custom_theme: Theme
 var log_option: OptionButton
 var tab_container: TabContainer
 var anim_logo: AnimatedSprite2D
+var rd_logs: String
+var rd_version: String
+var gc_version: String
+var l1_button_texture: Texture2D = load("res://assets/icons/kenney_input-prompts-pixel-16/Tiles/tile_0797.png")
+var r1_button_texture: Texture2D = load("res://assets/icons/kenney_input-prompts-pixel-16/Tiles/tile_0798.png")
 var a_button_texture: Texture2D = load("res://assets/icons/kenney_input-prompts-pixel-16/Tiles/tile_0042.png")
 var b_button_texture: Texture2D = load("res://assets/icons/kenney_input-prompts-pixel-16/Tiles/tile_0043.png")
 var l1_button_texture: Texture2D = load("res://assets/icons/kenney_input-prompts-pixel-16/Tiles/tile_0797.png")
@@ -95,13 +100,20 @@ func _load_log(index: int) -> void:
 func _play_main_animations() -> void:
 	anim_logo.play()
 
-func _hide_show_containers(button: Button, grid_container: GridContainer) -> void:
+func _hide_show_containers(button: Button) -> void:
 	match button.name:
-		"decorations_button", "systems_button":
-			grid_container.visible = true
+		"decorations_button":
+			%graphics_gridcontainer.visible = true
 			if button.toggle_mode:
 				button.toggle_mode=false
-				grid_container.visible = false
+				%graphics_gridcontainer.visible = false
+			else:
+				button.toggle_mode=true
+		"systems_button":
+			%systems_gridcontainer.visible = true
+			if button.toggle_mode:
+				button.toggle_mode=false
+				%systems_gridcontainer.visible = false
 			else:
 				button.toggle_mode=true
 
@@ -152,16 +164,22 @@ func _on_bios_button_pressed():
 	class_functions.logger("i","Bios Check")
 	load_popup("BIOS File Check", "res://components/bios_check/bios_popup_content.tscn","")
 	bios_type = 0
-	
+	log_parameters[2] = log_text + "Bios_Check"
+	log_results = class_functions.execute_command(wrapper_command, log_parameters, false)
+	load_popup("BIOS File Check", "res://components/bios_check/bios_popup_content.tscn","")
+	status_code_label.text = str(log_results["exit_code"])
+
 func _on_bios_button_expert_pressed():
 	_play_main_animations()
 	bios_type = 2
 	class_functions.logger("i","Advanced Bios Check")
 	load_popup("BIOS File Check", "res://components/bios_check/bios_popup_content.tscn","")
-	bios_type = 0
-	
+	status_code_label.text = str(log_results["exit_code"])
+
 func _on_exit_button_pressed():
 	_play_main_animations()
+	log_parameters[2] = log_text + "Exited"
+	log_results = class_functions.execute_command(wrapper_command, log_parameters, false)
 	_exit()
 	_exit()
 
