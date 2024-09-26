@@ -1,6 +1,9 @@
 extends Control
 
-var bios_result: Dictionary
+
+var file := FileAccess
+var bios_tempfile : String
+var command: String = "../../tools/retrodeck_function_wrapper.sh"
 var console: bool = false
 var BIOS_COLUMNS_BASIC := ["BIOS File Name", "System", "Found", "Hash Match", "Description"]
 var BIOS_COLUMNS_EXPERT := ["BIOS File Name", "System", "Found", "Hash Match", "Description", "Subdirectory", "Hash"]
@@ -20,6 +23,7 @@ func _ready():
 		table.columns = BIOS_COLUMNS_EXPERT.size()
 		for i in BIOS_COLUMNS_EXPERT.size():
 			table.set_column_title(i, BIOS_COLUMNS_EXPERT[i])
+	
 	var root = table.create_item()
 	table.hide_root = true
 	if bios_type == 1: #Basic BIOS button pressed

@@ -433,10 +433,12 @@ post_update() {
     # Placeholder for version 0.9.0b
 
     set_setting_value "$raconf" "libretro_info_path" "/var/config/retroarch/cores" "retroarch"
+    prepare_component "reset" "shadps4"
     # TODO: Configurator dialog: Hey, we need to reset ES-DE! (because again ES-DE folders, new theme and such)
     prepare_component "reset" "es-de"
     prepare_component "reset" "portmaster"
     prepare_component "reset" "ruffle"
+    prepare_component "reset" "steam-rom-manager"
     update_rd_conf
 
   # TODO: check this
