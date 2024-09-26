@@ -37,9 +37,10 @@ func load_base_data() -> AppData:
 				emulator.url = emulator_data["url"]
 				#emulator.system = emulator_data["system"]
 				emulator.launch = emulator_data["launch"]
+>>>>>>> be95a1bf935fae24a2ab447f99022a39ae7a896a
 				if emulator_data.has("properties"):
 					for property_data in emulator_data["properties"]:
-						#print (emulator,"----",property_data)
+						print (emulator,"----",property_data)
 						var property = EmulatorProperty.new()
 						if property_data.has("cheevos"):
 							property.cheevos = property_data.get("cheevos",true)
@@ -77,10 +78,10 @@ func load_base_data() -> AppData:
 						core.properties.append(property)	
 				cores[key] = core
 				
+				emulators[key] = emulator
 			var app_dict = AppData.new()
 			app_dict.about_links = about_links
 			app_dict.emulators = emulators
-			app_dict.cores = cores
 			return app_dict
 		else:
 			class_functions.logger("d","Error parsing JSON ")
@@ -89,7 +90,7 @@ func load_base_data() -> AppData:
 		get_tree().quit()
 	return null
 
-func save_base_data(app_dict: AppData):
+func save_base_data(app_dict: AppData): # was apP_data but gave warning
 	var file = FileAccess.open(data_file_path, FileAccess.READ)
 	var existing_data = {}
 	if file:
@@ -100,18 +101,18 @@ func save_base_data(app_dict: AppData):
 		file.close()
 	else:
 		print("File not found. Creating a new one.")		
-		#var about_links ={}
-		var about_links_new = Link.new()
+		var about_links = {}
 		for key in app_dict.about_links.keys():
 			var link = app_dict.about_links[key]
-			about_links_new[key] = {
+			about_links[key] = {
 				"name": link.name,
 				"url": link.url,
 				"description": link.description
 			}
+		
 	var new_data_dict = {}
-	#var about_links = {}
-	var about_links = Link.new()
+	# Convert about_links to a dictionary
+	var about_links = {}
 	for key in app_dict.about_links.keys():
 		var link = app_dict.about_links[key]
 		about_links[key] = {
@@ -119,6 +120,8 @@ func save_base_data(app_dict: AppData):
 			"url": link.url,
 			"description": link.description
 	}
+
+	# Convert emulators to a dictionary
 	var emulators = {}
 	for key in app_dict.emulators.keys():
 		var emulator = app_data.emulators[key]
@@ -128,16 +131,16 @@ func save_base_data(app_dict: AppData):
 				#"standalone": property.standalone,
 				"abxy_button": {"status": property.abxy_button}
 		})
+
 		emulators[key] = {
 			"name": emulator.name,
 			"description": emulator.description,
-			"launch": emulator.launch,
-			"system": emulator.system,
-			"url": emulator.url,
 			"properties": properties
 		}
+
 	new_data_dict["about_links"] = about_links
 	new_data_dict["emulators"] = emulators
+
 	# Merge existing data with new data
 	for key in new_data_dict.keys():
 		if existing_data.has(key):
@@ -149,6 +152,7 @@ func save_base_data(app_dict: AppData):
 				existing_dict[sub_key] = new_dict[sub_key]
 		else:
 			existing_data[key] = new_data_dict[key]
+
 	# Serialize the combined data to JSON
 	#var json_text = JSON.new().stringify(existing_data, "\t")
 	#var json_text = json.stringify(existing_data, "\t")
@@ -174,14 +178,13 @@ func modify_link(key: String, new_name: String, new_url: String, new_description
 		print("Link not found")
 
 # Function to modify an existing emulator
-func modify_emulator(key: String, new_name: String, new_launch: String, new_description: String, new_properties: Array):
+func modify_emulator(key: String, new_name: String, new_description: String, new_properties: Array):
 	#data_handler.modify_emulator_test()
 	var app_dict = load_base_data() # was app_data
 	if app_dict and app_dict.emulators.has(key):
 		var emulator = app_dict.emulators[key]
 		emulator.name = new_name
 		emulator.description = new_description
-		emulator.launch = new_launch
 		
 		# Update properties
 		emulator.properties.clear()
@@ -191,7 +194,9 @@ func modify_emulator(key: String, new_name: String, new_launch: String, new_desc
 			new_property.abxy_button = property.abxy_button
 			new_property.ask_to_exit = property.ask_to_exit
 			new_property.cheevos = property.cheevos
+			
 			emulator.properties.append(new_property)
+
 		app_dict.emulators[key] = emulator
 		save_base_data(app_dict)
 		print("Emulator modified successfully")
@@ -206,10 +211,10 @@ func add_emulator() -> void:
 	link.url = "https://example.com"
 	link.description = "An example description."
 	app_data.about_links["example_site"] = link
+
 	var emulator = Emulator.new()
-	emulator.name = "Example System"
+	emulator.name = "Example Emulator"
 	emulator.description = "An example emulator."
-	emulator.launch = "launcher"
 	var property = EmulatorProperty.new()
 	#property.standalone = true
 	property.abxy_button = false
@@ -219,22 +224,28 @@ func add_emulator() -> void:
 	
 func modify_emulator_test() -> void:
 	data_handler.modify_link("example_site", "Updated Site", "https://updated-example.com", "Updated description.")
+
+
 	var new_properties = []
 	var new_property = EmulatorProperty.new()
 	#new_property.standalone = false
 	new_property.abxy_button = true
 	new_properties.append(new_property)
-	data_handler.modify_emulator("example_emulator", "Updated System", "launcher", "Updated description",  new_properties)	
+
+	data_handler.modify_emulator("example_emulator", "Updated Emulator", "Updated description",  new_properties)
+	
 
 func parse_config_to_json(file_path: String) -> Dictionary:
 	var config = {}
 	var current_section = ""
+
 	var file = FileAccess.open(file_path, FileAccess.READ)
 	if file == null:
 		class_functions.logger("e","Failed to open file: " + file_path)
 		return config
 	while not file.eof_reached():
 		var line = file.get_line().strip_edges()
+		
 		if line.begins_with("[") and line.ends_with("]"):
 			current_section = line.substr(1, line.length() - 2)
 			config[current_section] = {}
@@ -254,8 +265,10 @@ func parse_config_to_json(file_path: String) -> Dictionary:
 						config[key] = value
 					else:
 						config[current_section][key] = value
+	
 	file.close()
 	return config
+	
 
 func config_save_json(config: Dictionary, json_file_path: String) -> void:
 	#var json = JSON.new()

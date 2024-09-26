@@ -636,6 +636,9 @@
     "ps3": {
       "name": "Sony PlayStation 3"
     },
+    "ps4": {
+      "name": "Sony PlayStation 4"
+    },
     "psp": {
       "name": "Sony PlayStation Portable"
     },
@@ -779,6 +782,9 @@
     },
     "x68000": {
       "name": "Sharp X68000"
+    },
+    "xbox360": {
+      "name": "Microsoft Xbox 360"
     },
     "xbox": {
       "name": "Microsoft Xbox"
@@ -1072,6 +1078,12 @@
       "ponzu": true,
       "abxy_button": true
     },
+    "shadps4": {
+      "description": "PS4 Emulator for Linux",
+      "name": "shadps4",
+      "system": "ps4",
+      "launch": "shadps4-qt"
+    },
     "dolphin": {
       "name": "Dolphin",
       "description": "Dolphin Wii and GameCube Emulator",
@@ -1132,12 +1144,23 @@
       "url": "https://retrodeck.readthedocs.io/en/latest/wiki_es_de/esde-guide/.",
       "launch": "es-de"
     },
+    "steam-rom-manager": {
+      "description": "Steam ROM Manager (used to sync RetroDECK favorites with Steam)",
+      "name": "Steam ROM Manager",
+      "launch": "steam-rom-manager"
+    },
     "portmaster": {
       "description": "PortMaster",
       "name": "PortMaster",
       "url": "https://retrodeck.readthedocs.io/en/latest/wiki_about/what-is-retrodeck/",
       "system": "portmaster",
       "launch": "PortMaster"
+    },
+    "xenia": {
+      "description": "Xenia Canary Xbox360 Emulator",
+      "name": "Xenia Canary",
+      "system": "xbox360",
+      "launch": "xenia-canary"
     }
   }
 }
