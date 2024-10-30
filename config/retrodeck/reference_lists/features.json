@@ -1143,6 +1143,14 @@
       "url": "https://retrodeck.readthedocs.io/en/latest/wiki_about/what-is-retrodeck/",
       "system": "portmaster",
       "launch": "PortMaster"
+    },
+    "lime3ds": {
+      "description": "Lime3DS Nintendo 3DS Emulator",
+      "name": "Lime3DS",
+      "url": "https://retrodeck.readthedocs.io/en/latest/wiki_about/what-is-retrodeck/",
+      "system": "n3ds",
+      "ponzu": true,
+      "launch": "lime3ds"
     }
   }
 }

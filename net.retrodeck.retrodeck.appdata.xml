@@ -91,6 +91,7 @@
                <li>Steam Sync is now a thing: favorite your games and enable the Steam Sync in the Configurator to find them as a Steam standalone games thank to Steam Rom Manager acting like an engine</li>
                <li>New Configurator completely written in GODOT, now with controller support and many more features to you to discover</li>
                <li>New run game engine added to run games via cli, just run `flatpak run net.retrodeck.retrodeck start retrodeck/roms/system/game.ext`, `--help` for more info</li>
+               <li>New Emulator: Lime3DS as Citra is no more available in RetroArch</li>
             </ul>
             <p>Known issues:</p>
             <ul>
