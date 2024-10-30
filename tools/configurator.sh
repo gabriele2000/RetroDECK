@@ -457,9 +457,6 @@ configurator_open_emulator_dialog() {
   if [[ $(get_setting_value "$rd_conf" "kiroi_ponzu" "retrodeck" "options") == "true" ]]; then
     emulator_list+=("Yuzu" "Open the Switch emulator Yuzu")
   fi
-  if [[ $(get_setting_value "$rd_conf" "akai_ponzu" "retrodeck" "options") == "true" ]]; then
-    emulator_list+=("Citra" "Open the 3DS emulator Citra")
-  fi
 
   emulator=$(rd_zenity --list \
   --title "RetroDECK Configurator Utility - Open Emulator" --cancel-label="Back" \
@@ -571,9 +568,6 @@ configurator_retrodeck_tools_dialog() {
 
   if [[ $(get_setting_value "$rd_conf" "kiroi_ponzu" "retrodeck" "options") == "true" ]]; then
     choices+=("Ponzu - Remove Yuzu" "Run Ponzu to remove Yuzu from RetroDECK. Configurations and saves will be mantained.")
-  fi
-  if [[ $(get_setting_value "$rd_conf" "akai_ponzu" "retrodeck" "options") == "true" ]]; then
-    choices+=("Ponzu - Remove Citra" "Run Ponzu to remove Citra from RetroDECK. Configurations and saves will be mantained.")
   fi
 
   choice=$(rd_zenity --list --title="RetroDECK Configurator Utility - RetroDECK: Tools" --cancel-label="Back" \
@@ -1097,12 +1091,9 @@ configurator_reset_dialog() {
     "XEMU" "Reset the XBOX emulator XEMU to default settings"
   )
 
-  # Check if any ponzu is true before adding Yuzu or Citra to the list
+  # Check if any ponzu is true before adding Yuzu to the list
   if [[ $(get_setting_value "$rd_conf" "kiroi_ponzu" "retrodeck" "options") == "true" ]]; then
     emulator_list+=("Yuzu" "Reset the Switch emulator Yuzu")
-  fi
-  if [[ $(get_setting_value "$rd_conf" "akai_ponzu" "retrodeck" "options") == "true" ]]; then
-    emulator_list+=("Citra" "Reset the 3DS emulator Citra")
   fi
 
   case $choice in

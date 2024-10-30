@@ -969,20 +969,6 @@
       ],
       "launch": "mame"
     },
-    "citra": {
-      "description": "Citra Nintendo 3DS Emulator (via Ponzu)",
-      "name": "Citra (via Ponzu)",
-      "url": "https://retrodeck.readthedocs.io/en/latest/wiki_about/what-is-retrodeck/",
-      "system": "n3ds",
-      "ponzu": true,
-      "launch": "citra-qt",
-      "properties": [
-        {
-          "abxy_button": true,
-          "ask_to_exit": true
-        }
-      ]
-    },
     "ruffle": {
       "description": "Flash Games emulator",
       "name": "Ruffle",

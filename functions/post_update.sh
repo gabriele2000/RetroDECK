@@ -442,6 +442,9 @@ post_update() {
     update_rd_conf
     prepare_component "reset" "steam-rom-manager"
 
+    # migrating from Citra to Lime3DS
+    mv "$saves_folder/n3ds/citra" "$saves_folder/n3ds/lime3ds"
+
   # TODO: check this
   #   rm /var/config/emulationstation/.emulationstation # remving the old symlink to .emulationstation as it might be not needed anymore
   # TODO: change <mlc_path>RETRODECKHOMEDIR/bios/cemu</mlc_path> in config/cemu/settings.xml into <mlc_path>RETRODECKHOMEDIR/bios/cemu/mlc</mlc_path>

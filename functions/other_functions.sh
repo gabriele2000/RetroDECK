@@ -679,16 +679,12 @@ ponzu() {
   log d "Checking for Ponzu"
 
   local tmp_folder="/tmp/extracted"
-  local ponzu_files=("$rdhome"/ponzu/Citra*.AppImage "$rdhome"/ponzu/citra*.AppImage "$rdhome"/ponzu/Yuzu*.AppImage "$rdhome"/ponzu/yuzu*.AppImage) 
+  local ponzu_files=("$rdhome"/ponzu/Yuzu*.AppImage "$rdhome"/ponzu/yuzu*.AppImage) 
   local data_dir
   local appimage
   local executable
 
   # if the binaries are found, ponzu should be set as true into the retrodeck config
-  if [ -f "/var/data/ponzu/Citra/bin/citra-qt" ]; then
-    log d "Citra binaries has already been installed, checking for updates and forcing the setting as true."
-    set_setting_value $rd_conf "akai_ponzu" "true" retrodeck "options"
-  fi
   if [ -f "/var/data/ponzu/Yuzu/bin/yuzu" ]; then
     log d "Yuzu binaries has already been installed, checking for updates and forcing the setting as true."
     set_setting_value $rd_conf "kiroi_ponzu" "true" retrodeck "options"
@@ -698,11 +694,7 @@ ponzu() {
   for ponzu_file in "${ponzu_files[@]}"; do
     # Check if the current ponzu file exists
     if [ -f "$ponzu_file" ]; then
-      if [[ "$ponzu_file" == *itra* ]]; then
-        log i "Found akai ponzu! Elaborating it"
-        data_dir="/var/data/ponzu/Citra"
-        local message="Akai ponzu is served, enjoy"
-      elif [[ "$ponzu_file" == *uzu* ]]; then
+      if [[ "$ponzu_file" == *uzu* ]]; then
         log i "Found kiroi ponzu! Elaborating it"
         data_dir="/var/data/ponzu/Yuzu"
         local message="Kiroi ponzu is served, enjoy"
@@ -725,15 +717,7 @@ ponzu() {
       log d "Cleaning up"
       cp -r squashfs-root/* "$tmp_folder"
       rm -rf *
-      if [[ "$ponzu_file" == *itra* ]]; then
-        mv "$tmp_folder/usr/"** .
-        executable="$data_dir/bin/citra"
-        log d "Making $executable and $executable-qt executable"
-        chmod +x "$executable"
-        chmod +x "$executable-qt"
-        prepare_component "reset" "citra"
-        set_setting_value $rd_conf "akai_ponzu" "true" retrodeck "options"
-      elif [[ "$ponzu_file" == *uzu* ]]; then
+      if [[ "$ponzu_file" == *uzu* ]]; then
         mv "$tmp_folder/usr/"** .
         executable="$data_dir/bin/yuzu"
         log d "Making $executable executable"
@@ -754,14 +738,7 @@ ponzu_remove() {
 
   # Call me with yuzu or citra and I will remove them
 
-  if [[ "$1" == "citra" ]]; then
-    if [[ $(configurator_generic_question_dialog "Ponzu - Remove Citra" "Do you really want to remove Citra binaries?\n\nYour games and saves will not be deleted.") == "true" ]]; then
-      log i "Ponzu: removing Citra"
-      rm -rf "/var/data/ponzu/Citra"
-      set_setting_value $rd_conf "akai_ponzu" "false" retrodeck "options"
-      configurator_generic_dialog "Ponzu - Remove Citra" "Done, Citra is now removed from RetroDECK"
-    fi
-  elif [[ "$1" == "yuzu" ]]; then
+  if [[ "$1" == "yuzu" ]]; then
     if [[ $(configurator_generic_question_dialog "Ponzu - Remove Yuzu" "Do you really want to remove Yuzu binaries?\n\nYour games and saves will not be deleted.") == "true" ]]; then
       log i "Ponzu: removing Yuzu"
       rm -rf "/var/data/ponzu/Yuzu"

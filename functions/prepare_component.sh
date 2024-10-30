@@ -232,49 +232,49 @@ prepare_component() {
     fi
   fi
 
-  if [[ "$component" =~ ^(citra|citra-emu|all)$ ]]; then
-  component_found="true"
+  if [[ "$component" =~ ^(lime3ds|all)$ ]]; then
+    component_found="true"
     if [[ "$action" == "reset" ]]; then # Run reset-only commands
       log i "------------------------"
-      log i "Prepearing CITRA"
+      log i "Prepearing Lime3DS"
       log i "------------------------"
       if [[ $multi_user_mode == "true" ]]; then # Multi-user actions
-        create_dir -d "$multi_user_data_folder/$SteamAppUser/config/citra-emu"
-        cp -fv $config/citra/qt-config.ini "$multi_user_data_folder/$SteamAppUser/config/citra-emu/qt-config.ini"
-        set_setting_value "$multi_user_data_folder/$SteamAppUser/config/citra-emu/qt-config.ini" "nand_directory" "$saves_folder/n3ds/citra/nand/" "citra" "Data%20Storage"
-        set_setting_value "$multi_user_data_folder/$SteamAppUser/config/citra-emu/qt-config.ini" "sdmc_directory" "$saves_folder/n3ds/citra/sdmc/" "citra" "Data%20Storage"
-        set_setting_value "$multi_user_data_folder/$SteamAppUser/config/citra-emu/qt-config.ini" "Paths\gamedirs\3\path" "$roms_folder/n3ds" "citra" "UI"
-        set_setting_value "$multi_user_data_folder/$SteamAppUser/config/citra-emu/qt-config.ini" "Paths\screenshotPath" "$screenshots_folder" "citra" "UI"
-        dir_prep "$multi_user_data_folder/$SteamAppUser/config/citra-emu" "/var/config/citra-emu"
+        create_dir -d "$multi_user_data_folder/$SteamAppUser/config/lime3ds-emu"
+        cp -fv $config/lime3ds/qt-config.ini "$multi_user_data_folder/$SteamAppUser/config/lime3ds-emu/qt-config.ini"
+        set_setting_value "$multi_user_data_folder/$SteamAppUser/config/lime3ds-emu/qt-config.ini" "nand_directory" "$saves_folder/n3ds/lime3ds/nand/" "lime3ds" "Data%20Storage"
+        set_setting_value "$multi_user_data_folder/$SteamAppUser/config/lime3ds-emu/qt-config.ini" "sdmc_directory" "$saves_folder/n3ds/lime3ds/sdmc/" "lime3ds" "Data%20Storage"
+        set_setting_value "$multi_user_data_folder/$SteamAppUser/config/lime3ds-emu/qt-config.ini" "Paths\gamedirs\3\path" "$roms_folder/n3ds" "lime3ds" "UI"
+        set_setting_value "$multi_user_data_folder/$SteamAppUser/config/lime3ds-emu/qt-config.ini" "Paths\screenshotPath" "$screenshots_folder" "lime3ds" "UI"
+        dir_prep "$multi_user_data_folder/$SteamAppUser/config/lime3ds-emu" "/var/config/lime3ds-emu"
       else # Single-user actions
-        create_dir -d /var/config/citra-emu/
-        cp -f $config/citra/qt-config.ini /var/config/citra-emu/qt-config.ini
-        set_setting_value "$citraconf" "nand_directory" "$saves_folder/n3ds/citra/nand/" "citra" "Data%20Storage"
-        set_setting_value "$citraconf" "sdmc_directory" "$saves_folder/n3ds/citra/sdmc/" "citra" "Data%20Storage"
-        set_setting_value "$citraconf" "Paths\gamedirs\3\path" "$roms_folder/n3ds" "citra" "UI"
-        set_setting_value "$citraconf" "Paths\screenshotPath" "$screenshots_folder" "citra" "UI"
+        create_dir -d /var/config/lime3ds-emu/
+        cp -f $config/lime3ds/qt-config.ini /var/config/lime3ds-emu/qt-config.ini
+        set_setting_value "$lime3dsconf" "nand_directory" "$saves_folder/n3ds/lime3ds/nand/" "lime3ds" "Data%20Storage"
+        set_setting_value "$lime3dsconf" "sdmc_directory" "$saves_folder/n3ds/lime3ds/sdmc/" "lime3ds" "Data%20Storage"
+        set_setting_value "$lime3dsconf" "Paths\gamedirs\3\path" "$roms_folder/n3ds" "lime3ds" "UI"
+        set_setting_value "$lime3dsconf" "Paths\screenshotPath" "$screenshots_folder" "lime3ds" "UI"
       fi
       # Shared actions
-      create_dir "$saves_folder/n3ds/citra/nand/"
-      create_dir "$saves_folder/n3ds/citra/sdmc/"
-      dir_prep "$bios_folder/citra/sysdata" "/var/data/citra-emu/sysdata"
-      dir_prep "$logs_folder/citra" "/var/data/citra-emu/log"
-      dir_prep "$mods_folder/Citra" "/var/data/citra-emu/load/mods"
-      dir_prep "$texture_packs_folder/Citra" "/var/data/citra-emu/load/textures"
+      create_dir "$saves_folder/n3ds/lime3ds/nand/"
+      create_dir "$saves_folder/n3ds/lime3ds/sdmc/"
+      dir_prep "$bios_folder/lime3ds/sysdata" "/var/data/lime3ds-emu/sysdata"
+      dir_prep "$logs_folder/lime3ds" "/var/data/lime3ds-emu/log"
+      dir_prep "$mods_folder/lime3ds" "/var/data/lime3ds-emu/load/mods"
+      dir_prep "$texture_packs_folder/lime3ds" "/var/data/lime3ds-emu/load/textures"
 
       # Reset default preset settings
-      set_setting_value "$rd_conf" "citra" "$(get_setting_value "$rd_defaults" "citra" "retrodeck" "abxy_button_swap")" "retrodeck" "abxy_button_swap"
-      set_setting_value "$rd_conf" "citra" "$(get_setting_value "$rd_defaults" "citra" "retrodeck" "ask_to_exit")" "retrodeck" "ask_to_exit"
+      set_setting_value "$rd_conf" "lime3ds" "$(get_setting_value "$rd_defaults" "lime3ds" "retrodeck" "abxy_button_swap")" "retrodeck" "abxy_button_swap"
+      set_setting_value "$rd_conf" "lime3ds" "$(get_setting_value "$rd_defaults" "lime3ds" "retrodeck" "ask_to_exit")" "retrodeck" "ask_to_exit"
     fi
     if [[ "$action" == "postmove" ]]; then # Run only post-move commands
-      dir_prep "$bios_folder/citra/sysdata" "/var/data/citra-emu/sysdata"
-      dir_prep "$rdhome/logs/citra" "/var/data/citra-emu/log"
-      dir_prep "$mods_folder/Citra" "/var/data/citra-emu/load/mods"
-      dir_prep "$texture_packs_folder/Citra" "/var/data/citra-emu/load/textures"
-      set_setting_value "$citraconf" "nand_directory" "$saves_folder/n3ds/citra/nand/" "citra" "Data%20Storage"
-      set_setting_value "$citraconf" "sdmc_directory" "$saves_folder/n3ds/citra/sdmc/" "citra" "Data%20Storage"
-      set_setting_value "$citraconf" "Paths\gamedirs\3\path" "$roms_folder/n3ds" "citra" "UI"
-      set_setting_value "$citraconf" "Paths\screenshotPath" "$screenshots_folder" "citra" "UI"
+      dir_prep "$bios_folder/lime3ds/sysdata" "/var/data/lime3ds-emu/sysdata"
+      dir_prep "$rdhome/logs/lime3ds" "/var/data/lime3ds-emu/log"
+      dir_prep "$mods_folder/lime3ds" "/var/data/lime3ds-emu/load/mods"
+      dir_prep "$texture_packs_folder/lime3ds" "/var/data/lime3ds-emu/load/textures"
+      set_setting_value "$lime3dsconf" "nand_directory" "$saves_folder/n3ds/lime3ds/nand/" "lime3ds" "Data%20Storage"
+      set_setting_value "$lime3dsconf" "sdmc_directory" "$saves_folder/n3ds/lime3ds/sdmc/" "lime3ds" "Data%20Storage"
+      set_setting_value "$lime3dsconf" "Paths\gamedirs\3\path" "$roms_folder/n3ds" "lime3ds" "UI"
+      set_setting_value "$lime3dsconf" "Paths\screenshotPath" "$screenshots_folder" "lime3ds" "UI"
     fi
   fi
 

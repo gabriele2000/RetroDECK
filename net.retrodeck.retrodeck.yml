@@ -660,23 +660,20 @@ modules:
         sha256: 5ab0fc46b07d022d4b0ff355e88175cd77b8bb1663612f31d160f8001dc472bb
 
   # Lime3DS
-  # why from source: AppImage not provided, only Flatpak
   # https://github.com/RetroDECK/io.github.lime3ds.Lime3DS
 
-  - name: retrodeck-lime3ds
+  - name: lime3ds
     buildsystem: simple
     build-commands:
+      - chmod +x *.AppImage
+      - ./*.AppImage --appimage-extract
       - mkdir -p "${FLATPAK_DEST}/retrodeck/tmplib" "${FLATPAK_DEST}/retrodeck/tmplib/debug"
-      - cp -r "files/lib/debug" "${FLATPAK_DEST}/retrodeck/tmplib"
-      - rm -rf "files/lib/debug"
-      - cp -rL "files/lib/"* "${FLATPAK_DEST}/retrodeck/tmplib"
-      - rm -rf "files/lib"
-      - cp -r files/* "${FLATPAK_DEST}"
-      - chmod +x "${FLATPAK_DEST}/bin/"*
+      - mv "squashfs-root/usr/lib/"* "${FLATPAK_DEST}/retrodeck/tmplib"
+      - cp -r squashfs-root/usr/* "${FLATPAK_DEST}"
     sources:
       - type: archive
-        url: https://github.com/RetroDECK/io.github.lime3ds.Lime3DS/releases/latest/download/RetroDECK-dolphin-Artifact.tar.gz
-        sha256: RETRODECKLIME3DSLATEST
+        url: https://github.com/Lime3DS/Lime3DS/releases/download/2119/lime3ds-2119-linux-appimage.tar.gz
+        sha256: e5efc4acfbcc9005001990fdf50ae021c188650a63f90daec17c9964c93faa03
 
   - name: fetch-missing-libs
     buildsystem: simple

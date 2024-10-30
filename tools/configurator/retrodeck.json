@@ -36,7 +36,6 @@
 		"retroarch": false
 	},
 	"options": {
-		"akai_ponzu": false,
 		"ask_default_user": true,
 		"branch": "",
 		"cloud_saves": false,
