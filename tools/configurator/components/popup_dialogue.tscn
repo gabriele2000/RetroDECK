@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bdbxu0r51jfk1"]
 
-[ext_resource type="Script" path="res://components/popup_dialogue.gd" id="1_oiwsy"]
+[ext_resource type="Script" uid="uid://dadq2ikeiaygk" path="res://components/popup_dialogue.gd" id="1_oiwsy"]
 [ext_resource type="Texture2D" uid="uid://brf74puvpnwsd" path="res://assets/graphics/retrodeck.png" id="2_3a55w"]
 
 [node name="Popup_Dialogue" type="Control"]
